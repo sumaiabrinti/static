@@ -7,8 +7,8 @@ pipeline{
                   sh 'tidy -q -e *.html'
               }
          }
-      stage('Upload to AWS') {
-               steps {
+        stage('Upload to AWS') {
+              steps {
                   retry(3){         
                     withAWS(region:'us-east-2',credentials:'aws-static') {
                     sh 'echo "Uploading content with AWS creds"'
@@ -17,7 +17,7 @@ pipeline{
                   }
               }
          }
-		 stage('Check if site is up') {
+         stage('Check if site is up') {
               steps {
                   retry(3){
                       
@@ -25,6 +25,5 @@ pipeline{
                   }
               }
          }
-        
     }
 }
