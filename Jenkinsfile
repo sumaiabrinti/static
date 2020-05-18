@@ -2,13 +2,14 @@ pipeline{
     agent any
     
     stages{
-      stage('Build') {
-              steps {
-                  sh 'echo "Hello World"'
-				  sh '''
-					echo "multiline shell scripts work too"
-					ls -lah
-					'''
+      stage('Upload to AWS') {
+               steps {
+                  retry(3){         
+                    withAWS(region:'us-east-2',credentials:'aws-static') {
+                    sh 'echo "Uploading content with AWS creds"'
+                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index.html', bucket:'mycicdjenkins')
+                    }
+                  }
               }
          }
         
