@@ -1,8 +1,8 @@
+  
 pipeline{
     agent any
-    
     stages{
-      stage('Lint HTML') {
+        stage('Lint HTML') {
               steps {
                   sh 'tidy -q -e *.html'
               }
@@ -20,10 +20,10 @@ pipeline{
          stage('Check if site is up') {
               steps {
                   retry(3){
-                      
-                      sh 'curl -X GET "http://mycicdjenkins.s3-website.us-east-2.amazonaws.com/index.html"'
+                      sh 'curl -X GET "https://mycicdjenkins.s3-us-east-2.amazonaws.com/index.html"'
                   }
               }
          }
     }
 }
+
