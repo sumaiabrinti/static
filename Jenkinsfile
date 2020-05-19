@@ -20,7 +20,6 @@ pipeline{
          stage('Check if site is up') {
               steps {
                   retry(3){
-                      
                       sh 'curl -X GET "http://mycicdjenkins.s3-website.us-east-2.amazonaws.com/index.html"'
                   }
               }
