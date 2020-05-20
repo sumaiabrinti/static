@@ -1,21 +1,28 @@
 pipeline{
     agent any
-
+    
     stages{
-    stage('Lint HTML') {
+      stage('Lint HTML') {
               steps {
                   sh 'tidy -q -e *.html'
               }
          }
-      stage('Build') {
+        stage('Upload to AWS') {
               steps {
-                  sh 'echo "Hello World"'
-				  sh '''
-					echo "multiline shell scripts work too"
-					ls -lah
-					'''
+                  retry(3){         
+                    withAWS(region:'us-east-2',credentials:'aws-static') {
+                    sh 'echo "Uploading content with AWS creds"'
+                        s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'index.html', bucket:'mycicdjenkins')
+                    }
+                  }
               }
          }
-
+         stage('Check if site is up') {
+              steps {
+                  retry(3){
+                      sh 'curl -X GET "http://mycicdjenkins.s3-website.us-east-2.amazonaws.com/index.html"'
+                  }
+              }
+         }
     }
-} 
+}
